@@ -23,8 +23,8 @@ app.listen(process.env.PORT || 4000)
 console.log('Server is online.')
 
 // TODO: comNameを自動取得
-const port = new SerialPort("/dev/tty.usbmodem1411", {
-  baudrate: 9600,
+const port = new SerialPort("/dev/ttyACM0", {
+  baudRate: 9600,
   dataBits: 8
 })
 
@@ -33,6 +33,7 @@ port.on('open', (err) => {
 })
 
 port.on('data', (data) => {
+  console.log(data);
   console.log('data received!! playerId: ' + playerId.toString()) // HITされた
   axios.put('http://localhost:3000/api/players/' + playerId.toString(), { hit: 1 }, axiosOptions)
     .then((res) => {
@@ -49,17 +50,18 @@ port.on('error', (err, req, res) => {
 
 app.post('/api/timer', (req, res) => {
   if(req.body.start) {
-    sendSignal('0')
+//    sendSignal('0')
     console.log('start')
     playerId = req.body.player_id
     res.send('start')
   } else if(req.body.stop) {
-    sendSignal('1')
+//    sendSignal('1')
     console.log('stop')
     res.send('stop')
   }
 })
 
+/*
 const sendSignal = (msg) => {
   setTimeout(() => {
     port.write(msg)
@@ -67,3 +69,4 @@ const sendSignal = (msg) => {
   }, 200)
   // NOP的な待ち時間が必要ぽい
 }
+*/
